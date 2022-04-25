@@ -4,7 +4,6 @@ import useSWR, { mutate } from "swr"
 import axios from "axios"
 // import React, { } from "react";
 import Navbar from "../components/navbar"
-import { Grid } from "@material-ui/core"
 import React, { useEffect, useState } from "react"
 import Card from "../components/card"
 import config from "../config/config"
