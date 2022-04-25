@@ -1,17 +1,16 @@
 import { useState } from "react"
 import Head from "next/head"
 import Layout from "../components/layout"
-import styles from "../styles/Home.module.css"
-import Navbar from "../components/navbar"
 import axios from "axios"
 import config from "../config/config"
-
+import { useRouter } from "next/router"
+import {motion} from "framer-motion"
 export default function Register({ token }) {
   const [username, setUsername] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [status, setStatus] = useState("")
-
+  let router = useRouter()
   const profileUser = async () => {
     console.log("token: ", token)
     const users = await axios.get(`${config.URL}/profile`, {
@@ -31,45 +30,69 @@ export default function Register({ token }) {
       console.log("result.data:  ", result.data)
       console.log("token:  ", token)
       setStatus(result.data.message)
+      if (result.status === 200)
+        setTimeout(() => {
+          router.push("/login")
+        }, 3000)
     } catch (e) {
       console.log(e)
     }
   }
 
   const registerForm = () => (
-    <div className={styles.gridContainer}>
-      <div>
-        <b>Username:</b>
-      </div>
-      <div>
-        <input
-          type="text"
-          name="username"
-          placeholder="username"
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
-      <div>
-        <b>Email:</b>
-      </div>
-      <div>
-        <input
-          type="email"
-          name="email"
-          placeholder="email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
-      <div>
-        <b>Password:</b>
-      </div>
-      <div>
-        <input
-          type="password"
-          name="password"
-          placeholder="password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
+    <div className="flex items-center justify-center ">
+      <div className="px-12 py-10  mt-4 w-[500px] text-left bg-white rounded-lg shadow-lg">
+        <h3 className="text-2xl font-bold text-center">Sign Up</h3>
+        <div className="mt-4">
+          <div>
+            {/* <b>Token:</b>
+            {token.substring(0, 15)}
+            <button onClick={copyText}> Copy token </button>
+            <label>{status}</label> */}
+          </div>
+          <div>
+            <label className="block" for="email">
+              Username
+            </label>
+            <input
+              type="text"
+              name="username"
+              placeholder="username"
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+            />
+          </div>
+          <div className="mt-4">
+            <label className="block">Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="email"
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+            />
+          </div>
+          <div className="mt-4">
+            <label className="block">Password</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="password"
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+            />
+          </div>
+
+          <div className="flex items-baseline justify-between">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              onClick={register}
+              className="px-6 py-2 mt-4 mx-auto text-white bg-blue-600 rounded-lg hover:bg-blue-900"
+            >
+              Register
+            </motion.button>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -79,43 +102,7 @@ export default function Register({ token }) {
       <Head>
         <title>Register Page</title>
       </Head>
-      {/* <Navbar /> */}
-      <div className={styles.container}>
-        <div
-          style={{
-            background: "rgba(255, 255, 255, 0.3)",
-            borderRadius: "10px",
-            backdropFilter: "blur(10px)",
-            textAlign: "center",
-            display: "block",
-            padding: "80px",
-            boxShadow: 3,
-          }}
-        >
-          <h1>Register</h1>
-          <div>
-            <b>Token:</b> {token.substring(0, 15)}...
-            <button
-              className={styles.btn1}
-              onClick={() => {
-                navigator.clipboard.writeText(token)
-              }}
-            >
-              Copy token
-            </button>
-          </div>
-          <br />
-          <b>Status: </b> <i>{status}</i>
-          <br />
-          <br />
-          <div className={styles.content}>{registerForm()}</div>
-          <div>
-            <button className={styles.btn} onClick={register}>
-              Register
-            </button>
-          </div>
-        </div>
-      </div>
+      {registerForm()}
     </Layout>
   )
 }

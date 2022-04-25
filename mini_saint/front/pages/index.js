@@ -3,7 +3,6 @@ import Layout from "../components/layout"
 import useSWR, { mutate } from "swr"
 import axios from "axios"
 // import React, { } from "react";
-import styles from "../styles/Index.module.css"
 import Navbar from "../components/navbar"
 import { Grid } from "@material-ui/core"
 import React, { useEffect, useState } from "react"
@@ -46,19 +45,12 @@ const index = ({ token }) => {
         <h1></h1>
       </div>
 
-      <div style={{ marginTop: "100px" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            width: "100%",
-            height: "100%",
-          }}
-        >
-          <Grid container spacing={1}>
+      <div className="">
+        <div className="flex md:container  mx-auto justify-center w-[100%] h-[100%]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {products.map((item) => {
               return (
-                <Grid container justifyContent="center" item md={2} sm={4}>
+                // <Grid container justifyContent="center" item md={2} sm={4}>
                   <Card
                     id={item.id}
                     productsname={item.productsname}
@@ -67,10 +59,10 @@ const index = ({ token }) => {
                     imageurl={item.imageurl}
                     userid={user.id}
                   />
-                </Grid>
+                // </Grid>
               )
             })}
-          </Grid>
+          </div>
         </div>
       </div>
     </Layout>

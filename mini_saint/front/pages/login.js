@@ -1,16 +1,13 @@
 import Head from "next/head"
 import Layout from "../components/layout"
 import { useState } from "react"
-import Navbar from "../components/navbar"
-import styles from "../styles/Home.module.css"
 import axios from "axios"
 import config from "../config/config"
-import Button from "@material-ui/core/Button"
+import { useRouter } from "next/router"
 import { motion } from "framer-motion"
 
-const ButtonMotion = motion(Button)
-
 export default function Login({ token }) {
+  let router = useRouter()
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [status, setStatus] = useState("")
@@ -26,6 +23,7 @@ export default function Login({ token }) {
       console.log("result.data:  ", result.data)
       console.log("token:  ", token)
       setStatus(result.status + ": " + result.data.user.username)
+      if (result.status === 200) setTimeout(() => router.push("/product"), 3000)
     } catch (e) {
       console.log("error: ", JSON.stringify(e.response))
       setStatus(JSON.stringify(e.response).substring(0, 80) + "...")
@@ -34,48 +32,59 @@ export default function Login({ token }) {
   const reMem = async () => {
     setRemember(!remember)
   }
-
   const loginForm = () => (
-    <div className={styles.gridContainer}>
-      <div className={styles.text}>
-        <b style={{ color: "black" }}>Username:</b>
-      </div>
-      <div>
-        <input
-          type="text"
-          name="username"
-          placeholder="username"
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
-      <div className={styles.text}>
-        <b style={{ color: "black" }}>Password:</b>
-      </div>
-      <div>
-        <input
-          type="password"
-          name="password"
-          placeholder="password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <div className="flex items-center">
-        <input
-          id="remember_me"
-          name="remember_me"
-          type="checkbox"
-          onClick={reMem}
-        />
-      </div>
-      <div className={styles.text}>
-        <label>
-          <i>
-            <b style={{ color: "black" }}>remember</b>
-          </i>
-        </label>
+    <div className="flex items-center justify-center ">
+      <div className="px-12 py-10  mt-4 w-[500px] text-left bg-white rounded-lg shadow-lg">
+        <h3 className="text-2xl font-bold text-center">Login to your account</h3>
+          <div className="mt-4">
+          <div>
+          <b>Token:</b>{token.substring(0, 15)}
+          <button onClick={copyText}> Copy token </button>
+          <label>{status}</label>
+        </div>
+            <div>
+              <label className="block" for="email">
+                Username
+              </label>
+              <input
+                type="text"
+                name="username"
+                placeholder="username"
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+              />
+            </div>
+            <div className="mt-4">
+              <label className="block">Password</label>
+              <input
+                type="password"
+                name="password"
+                placeholder="password"
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+              />
+            </div>
+            <div className="flex mt-4 iitems-baseline ">
+              <input
+                className=" px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                id="remember_me"
+                name="remember_me"
+                type="checkbox"
+                onClick={reMem}
+              />
+              <label className="ml-3 my-auto">remember</label>
+            </div>
+            <div className="flex items-baseline justify-between">
+              <motion.button whileHover={{scale : 1.1}} onClick={login} className="px-6 py-2 mt-4 mx-auto text-white bg-blue-600 rounded-lg hover:bg-blue-900">
+                Login
+              </motion.button>
+            </div>
+          </div>
       </div>
     </div>
   )
+
+
 
   const copyText = () => {
     navigator.clipboard.writeText(token)
@@ -86,44 +95,8 @@ export default function Login({ token }) {
       <Head>
         <title>Login</title>
       </Head>
-      {/* <Navbar /> */}
-      <div className={styles.container}>
-        <div
-          style={{
-            background: "rgba(255, 255, 255, 0.3)",
-            borderRadius: "10px",
-            backdropFilter: "blur(10px)",
-            textAlign: "center",
-            display: "block",
-            padding: "80px",
-            boxShadow: 3,
-          }}
-        >
-          <h1>Login</h1>
-          <div style={{ textAlign: "left" }}>
-            <b>Token:</b>
-            {token.substring(0, 15)}
-            <button className={styles.btn1} onClick={copyText}>
-              {" "}
-              Copy token{" "}
-            </button>
-          </div>
-          <br />
-          <div style={{ textAlign: "left" }}>Status: {status}</div>
-          <br />
-          {loginForm()}
-          <div style={{ justifyContent: "center", display: "flex" }}>
-            <ButtonMotion
-            size="large"
-              style={{ backgroundColor: "#008CBA", color: "white" , }}
-              onClick={login}
-              whileHover={{ scale: 1.1 }}
-            >
-              Login
-            </ButtonMotion>
-          </div>
-        </div>
-      </div>
+
+      {loginForm()}
     </Layout>
   )
 }
